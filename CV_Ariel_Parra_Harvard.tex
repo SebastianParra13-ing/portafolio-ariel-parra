@@ -1,0 +1,121 @@
+%============================================================================
+% CV FORMATO HARVARD ESTRICTO (1 COLUMNA, ATS-FRIENDLY)
+% Autor: Ariel Sebastián Parra Pérez
+% Compilador recomendado: pdflatex / xelatex (Overleaf o TeX Live)
+%============================================================================
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{lmodern}
+\usepackage[top=1.2cm, bottom=1.2cm, left=1.5cm, right=1.5cm]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% Formato de secciones estilo Harvard (Mayúsculas + línea horizontal completa)
+\titleformat{\section}
+  {\normalsize\bfseries\uppercase}
+  {}{0em}{}
+  [\titlerule]
+\titlespacing*{\section}{0pt}{8pt}{4pt}
+
+% Listas compactas optimizadas para 1 sola página
+\setlist[itemize]{leftmargin=1.2em, noitemsep, topsep=2pt, parsep=0pt, partopsep=0pt}
+
+\begin{document}
+
+%----------------------------------------------------------------------------
+% ENCABEZADO
+%----------------------------------------------------------------------------
+\begin{center}
+    {\LARGE \textbf{ARIEL SEBASTIÁN PARRA PÉREZ}} \\[3pt]
+    Quito, Ecuador \textbar\ C.I.: 1724782709 \textbar\ +593 98 768 7053 \textbar\ \href{mailto:sebasparra676@gmail.com}{sebasparra676@gmail.com} \textbar\ \href{https://www.linkedin.com/in/sebastian-parra-784619278}{in/sebastian-parra-784619278}
+\end{center}
+
+%----------------------------------------------------------------------------
+% EDUCACIÓN
+%----------------------------------------------------------------------------
+\section{Educación}
+
+\textbf{UNIVERSIDAD DE LAS AMÉRICAS (UDLA)} \hfill Quito, Ecuador \\
+\textit{Ingeniería en Electrónica y Automatización (Séptimo Semestre)} \hfill \textit{Finalización estimada: 2027}
+\begin{itemize}
+    \item \textbf{Becas de Excelencia:} Becario al 100\% por Excelencia Académica (UDLA) y Becario de \textit{Patricio Andrade Marín Charitable Foundation Inc.}
+    \item \textbf{Distinciones Académicas:} Galardonado dos veces consecutivas con el \textbf{Mejor Promedio de la Carrera y Facultad} (Ciclos 2025-10 y 2025-20).
+    \item \textbf{Logros Competitivos:} 2.\textsuperscript{o} y 3.\textsuperscript{er} Lugar en la feria de proyectos de ingeniería \textit{Ingennials} (Ciclos 2025-10 y 2025-20) por el desarrollo de soluciones integradas de electrónica aplicada y software.
+    \item \textbf{Ejes Técnicos Consolidados:} Sistemas de Control Automático y Discreto, Instrumentación Industrial, Mandos Neumáticos, Máquinas Eléctricas, Electrónica de Potencia, Instalaciones Eléctricas Industriales, Redes Industriales y Sistemas SCADA.
+\end{itemize}
+
+%----------------------------------------------------------------------------
+% EXPERIENCIA PROFESIONAL Y ACADÉMICA
+%----------------------------------------------------------------------------
+\section{Experiencia Práctica y Liderazgo Técnico}
+
+\textbf{CENTRO DE INVESTIGACIÓN Y DESARROLLO DE LA FUERZA AÉREA ECUATORIANA (CIDFAE)} \hfill Ecuador \\
+\textit{Pasante de Investigación y Desarrollo (I+D) en Electrónica y Sistemas} \hfill \textit{Pasantía Preprofesional}
+\begin{itemize}
+    \item Diseñé y validé prototipos de drones (UAVs) para la Fuerza Aérea, resolviendo retos de sustentación y eficiencia energética en altura para sostener operaciones de 30 minutos con 2 kg de carga útil.
+\end{itemize}
+\vspace{3pt}
+
+\textbf{VATIOTEC} \hfill Quito, Ecuador \\
+\textit{Pasante Técnico de Ingeniería Eléctrica, Electrónica y Mecánica} \hfill \textit{Pasantía Preprofesional}
+\begin{itemize}
+    \item Diseñé y armé tableros industriales de fuerza, control y protección, optimizando instalaciones eléctricas y reduciendo tiempos de diagnóstico (MTTR).
+\end{itemize}
+\vspace{3pt}
+
+\textbf{UNIVERSIDAD DE LAS AMÉRICAS (UDLA)} \hfill Quito, Ecuador \\
+\textit{Ayudante de Cátedra y Future Makers — Ingeniería en Electrónica y Automatización} \hfill \textit{2026-10 -- Presente}
+\begin{itemize}
+    \item Guié laboratorios de Electrónica, Programación y Robótica, y diseñé piezas 3D en software CAD para optimizar el equipamiento técnico, mejorando la ergonomía y facilitando el aprendizaje práctico.
+\end{itemize}
+
+%----------------------------------------------------------------------------
+% PROYECTOS DE INGENIERÍA E INTEGRACIÓN INDUSTRIAL
+%----------------------------------------------------------------------------
+\section{Proyectos de Ingeniería y Automatización Aplicada}
+
+\textbf{Sistema Automatizado de Clasificación con Visión Artificial (Machine Learning + Control Electromecánico)}
+\begin{itemize}
+    \item Desarrollé una estación automatizada para clasificación de materiales reciclables integrando modelos de visión artificial en tiempo real y actuadores electromecánicos sincronizados, eliminando cuellos de botella por separación manual.
+\end{itemize}
+\vspace{2pt}
+
+\textbf{Red de Iluminación Inteligente Dimerizable de Largo Alcance (ESP32 + Electrónica de Potencia + LoRa)}
+\begin{itemize}
+    \item Diseñé un sistema autónomo de regulación lumínica con etapa de potencia dimerizable y enlace de telemetría LoRa, optimizando el consumo energético operativo en áreas extensas sin infraestructura de red cableada.
+\end{itemize}
+\vspace{2pt}
+
+\textbf{Tableros Industriales de Fuerza y Control (Lógica Cableada, Variadores y Protecciones)}
+\begin{itemize}
+    \item Dimensioné e implementé tableros de control de motores (secuencias de marcha/paro, enclavamientos, relés térmicos, arrancadores suaves y variadores de frecuencia Siemens/Schneider), validados mediante CADe-SIMU y AutoCAD.
+\end{itemize}
+\vspace{2pt}
+
+\textbf{Sistema IIoT de Monitoreo Agroindustrial en Tiempo Real y Robótica Multipropósito}
+\begin{itemize}
+    \item Implementé una arquitectura de instrumentación ambiental con visualización web en tiempo real para control automatizado de riego; adicionalmente diseñé en 3D (Autodesk Inventor) y programé un robot hexápodo biomecánico y el asistente en Python \textit{VICTUS IA} mediante consumo de APIs y reconocimiento de voz.
+\end{itemize}
+
+%----------------------------------------------------------------------------
+% HABILIDADES TÉCNICAS, CERTIFICACIONES E IDIOMAS
+%----------------------------------------------------------------------------
+\section{Habilidades Técnicas, Certificaciones e Idiomas}
+
+\begin{itemize}
+    \item \textbf{Automatización Industrial, PLCs y SCADA:} Siemens TIA Portal, Ignition SCADA, V-Assistant, Factory I/O, lógica Ladder, PLCs Siemens (S7 / LOGO!) y Schneider Electric, variadores de frecuencia (VFD), arrancadores suaves y operación de brazos robóticos KUKA.
+    \item \textbf{Hardware Embebido, Instrumentación y Potencia:} ESP32, STM32, Raspberry Pi, NI myDAQ, redes inalámbricas LoRa, diseño de circuitos analógicos/digitales e implementación de etapas de potencia.
+    \item \textbf{Software de Ingeniería, CAD y Simulación:} AutoCAD, Autodesk Inventor (Modelado 2D/3D), CADe-SIMU, MATLAB, LabVIEW, ROS (Robot Operating System), Proteus, LTspice.
+    \item \textbf{Programación, Datos e IA:} Python (Visión Artificial/ML, APIs, Web Scraping, Procesamiento de Voz), C, C++, Power BI, Power Apps, LaTeX, e integración avanzada de flujos de ingeniería asistidos por IA.
+    \item \textbf{Certificaciones Técnicas:} Aplicaciones de LOGO! Siemens en la Industria (UDLA, 2024) \textbar\ Autodesk Inventor 2025 (40h, 2025) \textbar\ Arduino Certification Program (2025) \textbar\ Python Essentials 1 \& 2 (Cisco, 2024) \textbar\ Introduction to AI (IBM/Coursera, 2024).
+    \item \textbf{Idiomas:} Español (Nativo) \textbar\ \textbf{Inglés: Nivel B2 Certificado} (Capacidad fluida para interpretación de manuales técnicos, normas IEC/IEEE y hojas de datos).
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ariel Parra Pérez — Folleto Interactivo de Ingeniería (Portafolio)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- StPageFlip library for real diagonal paper-curl physics (with automatic fallback) -->
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+  <style>
+    /* ==========================================================================
+       1. TOKENS & EDITORIAL PALETTE (LIAM MANSORI REFERENCE + 3 SKILLS)
+       ========================================================================== */
+    :root {
+      --navy-deep: #060f2a;
+      --navy-ink: #08122e;
+      --lime-accent: #8be810;
+      --paper-white: #ffffff;
+      --ice-tint: #ebf2f7;
+      --blueprint-blue: #265999;
+      --text-dark: #08122e;
+      --text-body: #1e293b;
+      --text-muted: #526077;
+
+      --font-display: 'Archivo', 'IBM Plex Sans', sans-serif;
+      --font-body: 'IBM Plex Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --page-w: 500px;
+      --page-h: 707px;
+      --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 42%, #f1f4f8 0%, #d7dfe9 100%);
+      font-family: var(--font-body);
+      color: var(--text-dark);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .tabular {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ==========================================================================
+       2. TOP BAR & BOTTOM BROCHURE CONTROLS
+       ========================================================================== */
+    .viewer-shell {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px 16px;
+    }
+
+    .viewer-header {
+      width: 100%;
+      max-width: 1180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 80;
+    }
+
+    .zoom-dock {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 4px 10px;
+      user-select: none;
+    }
+
+    .zoom-track-wrap {
+      position: relative;
+      width: 176px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Puntos indicadores en los extremos del slider como en la referencia */
+    .zoom-track-wrap::before,
+    .zoom-track-wrap::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #646c7a;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .zoom-track-wrap::before {
+      left: 4px;
+    }
+
+    .zoom-track-wrap::after {
+      right: 4px;
+    }
+
+    .zoom-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(
+        to right,
+        #aeb5c2 0%,
+        #aeb5c2 var(--zoom-pct, 31.25%),
+        #d2d7e0 var(--zoom-pct, 31.25%),
+        #d2d7e0 100%
+      );
+      outline: none;
+      cursor: pointer;
+      margin: 0;
+      position: relative;
+      z-index: 3;
+    }
+
+    .zoom-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1.5px solid #c4cad4;
+      box-shadow: 0 2px 5px rgba(15, 23, 42, 0.16);
+      cursor: pointer;
+      transition: transform 120ms var(--ease-out-strong), box-shadow 120ms var(--ease-out-strong);
+    }
+
+    .zoom-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.06);
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.22);
+    }
+
+    .zoom-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1.5px solid #c4cad4;
+      box-shadow: 0 2px 5px rgba(15, 23, 42, 0.16);
+      cursor: pointer;
+      transition: transform 120ms var(--ease-out-strong), box-shadow 120ms var(--ease-out-strong);
+    }
+
+    .zoom-readout {
+      min-width: 48px;
+      padding: 2px 4px;
+      border: none;
+      background: transparent;
+      color: #4b5563;
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      font-variant-numeric: tabular-nums;
+      transition: color 140ms var(--ease-out-strong);
+    }
+
+    .zoom-readout:hover {
+      color: var(--navy-deep);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ctrl-btn {
+      height: 38px;
+      padding: 0 16px;
+      background: #ffffff;
+      color: var(--navy-deep);
+      border: 1px solid rgba(6, 15, 42, 0.15);
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(6, 15, 42, 0.08);
+      transition: transform 120ms var(--ease-out-strong), background-color 150ms var(--ease-out-strong), color 150ms var(--ease-out-strong);
+    }
+
+    .ctrl-btn:hover {
+      background: var(--navy-deep);
+      color: #ffffff;
+      border-color: var(--navy-deep);
+    }
+
+    .ctrl-btn:active {
+      transform: scale(0.97);
+    }
+
+    .ctrl-btn-lime {
+      background: var(--lime-accent);
+      color: var(--navy-deep);
+      border-color: var(--lime-accent);
+    }
+
+    .ctrl-btn-lime:hover {
+      background: #9ef522;
+      color: var(--navy-deep);
+      border-color: #9ef522;
+    }
+
+    .viewer-footer {
+      width: 100%;
+      max-width: 1180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      z-index: 80;
+    }
+
+    .spread-dots {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(8px);
+      padding: 5px 8px;
+      border: 1px solid rgba(6, 15, 42, 0.1);
+      box-shadow: 0 4px 16px rgba(6, 15, 42, 0.06);
+    }
+
+    .spread-dot {
+      height: 26px;
+      padding: 0 10px;
+      border: none;
+      background: transparent;
+      font-family: var(--font-display);
+      font-size: 0.74rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 140ms var(--ease-out-strong);
+    }
+
+    .spread-dot.active {
+      background: var(--navy-deep);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .spread-dot:hover:not(.active) {
+      background: rgba(6, 15, 42, 0.08);
+      color: var(--navy-deep);
+    }
+
+    /* ==========================================================================
+       3. BROCHURE STAGE & STPAGEFLIP / REALISTIC SPINE SHADOWS
+       ========================================================================== */
+    .stage-wrapper {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      user-select: none;
+    }
+
+    .stage-wrapper.is-panning {
+      cursor: grabbing;
+    }
+
+    .stage-canvas {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 180ms var(--ease-out-strong);
+      will-change: transform;
+    }
+
+    .stage-wrapper.is-panning .stage-canvas {
+      transition: none;
+    }
+
+    .flipbook-frame {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 26px 46px rgba(6, 15, 42, 0.24));
+      transition: transform 520ms var(--ease-out-strong);
+    }
+
+    /* Center Spine Crease Overlay for Two-Page Spreads (Matches Screenshot 2!) */
+    .brochure-page {
+      width: var(--page-w);
+      height: var(--page-h);
+      background-color: var(--paper-white);
+      overflow: hidden;
+    }
+
+    .page-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--paper-white);
+      overflow: hidden;
+    }
+
+    /* Spine crease gradient on Left (even) and Right (odd) interior pages */
+    .page-left .page-inner::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 34px;
+      pointer-events: none;
+      z-index: 25;
+      background: linear-gradient(to right, rgba(6, 15, 42, 0) 0%, rgba(6, 15, 42, 0.06) 65%, rgba(6, 15, 42, 0.22) 100%);
+    }
+
+    .page-right .page-inner::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 34px;
+      pointer-events: none;
+      z-index: 25;
+      background: linear-gradient(to left, rgba(6, 15, 42, 0) 0%, rgba(6, 15, 42, 0.05) 65%, rgba(6, 15, 42, 0.18) 100%);
+    }
+
+    .page-navy .page-inner {
+      background: var(--navy-deep);
+      color: var(--paper-white);
+    }
+
+    /* ==========================================================================
+       4. EDITORIAL ELEMENTS INSIDE THE 10 PAGES
+       ========================================================================== */
+    .sq-btn {
+      width: 38px;
+      height: 38px;
+      background: var(--navy-deep);
+      color: var(--paper-white);
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      cursor: pointer;
+      text-decoration: none;
+      flex-shrink: 0;
+      z-index: 30;
+      transition: transform 120ms var(--ease-out-strong), background-color 150ms var(--ease-out-strong), color 150ms var(--ease-out-strong);
+    }
+
+    .sq-btn:hover {
+      background: var(--lime-accent);
+      color: var(--navy-deep);
+    }
+
+    .sq-btn-white {
+      background: var(--paper-white);
+      color: var(--navy-deep);
+    }
+
+    .u-title {
+      font-weight: 700;
+      font-size: 0.76rem;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      margin-bottom: 3px;
+      color: var(--navy-ink);
+    }
+
+    .lime-sq {
+      display: inline-block;
+      width: 14px;
+      height: 17px;
+      background: var(--lime-accent);
+      vertical-align: top;
+      margin-left: 5px;
+      transform: translateY(6px);
+    }
+
+    .visual-frame {
+      position: relative;
+      background: #101829;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .visual-frame svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .slot-caption {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      background: rgba(6, 15, 42, 0.86);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 0.53rem;
+      padding: 3px 6px;
+      border-left: 2px solid var(--lime-accent);
+      letter-spacing: 0.02em;
+      pointer-events: none;
+    }
+
+    .folio-num {
+      position: absolute;
+      bottom: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      color: var(--text-muted);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .page-right .folio-num, .page-cover-front .folio-num { right: 20px; }
+    .page-left .folio-num, .page-cover-back .folio-num { left: 20px; }
+    .page-navy .folio-num { color: rgba(255, 255, 255, 0.55); }
+
+    /* P.01 Cover */
+    .p1-top {
+      text-align: right;
+      font-size: 0.74rem;
+      line-height: 1.35;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .p1-display {
+      font-family: var(--font-display);
+      font-size: 3.45rem;
+      font-weight: 500;
+      line-height: 0.96;
+      letter-spacing: -0.035em;
+      margin-top: 52px;
+    }
+
+    .p1-lastline {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+    }
+
+    .p1-sub {
+      font-family: var(--font-body);
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      font-size: 0.72rem;
+      line-height: 1.42;
+      color: rgba(255, 255, 255, 0.88);
+      margin-top: 10px;
+      padding-bottom: 6px;
+    }
+
+    .p1-gallery {
+      display: grid;
+      grid-template-columns: 1fr 1.85fr;
+      gap: 12px;
+      height: 245px;
+      margin-top: 14px;
+    }
+
+    .p1-sig {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+    }
+
+    /* P.02 Intro & Cross-Spine Bleed (Matches Screenshot 2!) */
+    .p2-intro {
+      font-size: 0.72rem;
+      line-height: 1.44;
+      color: var(--text-body);
+      max-width: 310px;
+    }
+
+    .p2-mid {
+      display: grid;
+      grid-template-columns: 1.22fr 1fr;
+      gap: 18px;
+      align-items: start;
+      position: relative;
+    }
+
+    .avatar-lime {
+      width: 52px;
+      height: 52px;
+      background: var(--lime-accent);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      font-weight: 700;
+      color: var(--navy-deep);
+      border: 1.5px solid var(--navy-deep);
+    }
+
+    .p2-hello {
+      font-family: var(--font-display);
+      font-size: 2.55rem;
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      color: var(--navy-ink);
+    }
+
+    .p2-bleed-art {
+      height: 210px;
+      margin-right: -40px;
+      background: #12161f;
+    }
+
+    /* Matching cross-spine bleed continuation on left edge of Page 3 (like Screenshot 2!) */
+    .p3-spine-bleed {
+      position: absolute;
+      left: 0;
+      bottom: 138px;
+      width: 26px;
+      height: 210px;
+      background: #12161f;
+      z-index: 10;
+    }
+
+    .p2-bot {
+      display: grid;
+      grid-template-columns: 1.22fr 1fr;
+      gap: 18px;
+      font-size: 0.7rem;
+      line-height: 1.42;
+    }
+
+    /* P.03 Certs & Skills */
+    .p3-top {
+      display: grid;
+      grid-template-columns: 115px 1fr;
+      gap: 16px;
+    }
+
+    .cert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.66rem;
+      line-height: 1.36;
+      color: var(--text-body);
+    }
+
+    .p3-title {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      margin: 8px 0 6px;
+    }
+
+    .p3-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 185px 145px;
+      gap: 10px;
+    }
+
+    .skill-box {
+      background: var(--ice-tint);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 0.68rem;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      background: #334155;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      border-radius: 3px;
+    }
+
+    /* P.04 & P.05 Experience */
+    .exp-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 0.69rem;
+      line-height: 1.42;
+    }
+
+    .exp-list li::before {
+      content: "• ";
+      font-weight: 700;
+    }
+
+    .arrow-small {
+      list-style: none;
+      font-size: 0.64rem;
+      line-height: 1.45;
+      margin-top: 4px;
+    }
+
+    /* P.09 Interactive Switcher Pills */
+    .mini-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+      position: relative;
+      z-index: 35;
+    }
+
+    .mini-tab {
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      padding: 3px 6px;
+      border: 1px solid var(--navy-deep);
+      background: #ffffff;
+      color: var(--navy-deep);
+      cursor: pointer;
+      transition: all 130ms var(--ease-out-strong);
+    }
+
+    .mini-tab.active, .mini-tab:hover {
+      background: var(--navy-deep);
+      color: #ffffff;
+    }
+
+    /* Modal Inspector */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(6, 15, 42, 0.8);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 200ms var(--ease-out-strong);
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      color: var(--navy-ink);
+      max-width: 560px;
+      width: 100%;
+      padding: 28px 32px;
+      border-top: 5px solid var(--lime-accent);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewer-shell">
+    <!-- TOP BAR: SLIDER DE ZOOM -->
+    <header class="viewer-header">
+      <div class="zoom-dock" role="group" aria-label="Control deslizante de zoom">
+        <div class="zoom-track-wrap">
+          <input
+            class="zoom-slider"
+            id="zoomSlider"
+            type="range"
+            min="50"
+            max="220"
+            step="1"
+            value="100"
+            aria-label="Porcentaje de zoom"
+          />
+        </div>
+        <button class="zoom-readout" id="zoomResetBtn" type="button" title="Clic para restablecer al 100%">100 %</button>
+      </div>
+    </header>
+
+    <!-- FLIPBOOK STAGE -->
+    <div class="stage-wrapper" id="stageWrapper">
+      <div class="stage-canvas" id="stageCanvas">
+        <div class="flipbook-frame" id="flipbookFrame">
+          <div id="flipbook">
+
+          <!-- ================================================================
+               PÁGINA 01: PORTADA (NAVY COVER)
+               ================================================================ -->
+          <div class="brochure-page page-navy page-cover-front" data-density="soft">
+            <div class="page-inner">
+              <span class="folio-num">01</span>
+
+              <div class="p1-top">
+                Ingeniería en Electrónica y Automatización<br />
+                <strong>Ariel Parra Pérez</strong>
+              </div>
+
+              <div>
+                <h1 class="p1-display">
+                  Engineering<span class="lime-sq"></span><br />
+                  portfolio<br />
+                  <span class="p1-lastline">
+                    <span class="p1-sub">
+                      Proyectos de Automatización,<br />
+                      Control Industrial, SCADA e I+D
+                    </span>
+                  </span>
+                </h1>
+
+                <div class="p1-gallery">
+                  <div class="visual-frame" style="background: #cfd4dc;">
+                    <svg viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="220" height="260" fill="#cfd4dc"/>
+                      <path d="M25,0 C85,90 130,170 190,260" stroke="#1d4ed8" stroke-width="18" fill="none"/>
+                      <path d="M65,0 C110,95 155,180 210,260" stroke="#8be810" stroke-width="15" fill="none"/>
+                      <ellipse cx="112" cy="132" rx="38" ry="22" transform="rotate(-28 112 132)" fill="#8be810" stroke="#060f2a" stroke-width="2.5"/>
+                    </svg>
+                    <span class="slot-caption">[ BOCETO: CABLEADO / INSTRUMENTACIÓN ]</span>
+                  </div>
+
+                  <div class="visual-frame" style="background: #f8fafc;">
+                    <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="380" height="260" fill="#f8fafc"/>
+                      <polygon points="40,225 340,85 360,102 60,242" fill="#94a3b8" stroke="#060f2a" stroke-width="1.5"/>
+                      <circle cx="155" cy="125" r="58" fill="#e2e8f0" stroke="#060f2a" stroke-width="2.5"/>
+                      <circle cx="155" cy="125" r="24" fill="#94a3b8" stroke="#060f2a" stroke-width="2"/>
+                    </svg>
+                    <span class="slot-caption">[ BOCETO: RENDER CAD 3D INVENTOR 2025 ]</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p1-sig">Ariel Parra Pérez</div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               PÁGINA 02: PRESENTACIÓN (LEFT SPREAD)
+               ================================================================ -->
+          <div class="brochure-page page-left" data-density="soft">
+            <div class="page-inner">
+              <span class="folio-num">02</span>
+
+              <p class="p2-intro">
+                Con una base consolidada en control automático, modelado CAD 3D, electrónica de potencia y gestión de proyectos, he liderado soluciones de ingeniería que demuestran rigor técnico, creatividad y confiabilidad operativa.
+              </p>
+
+              <div class="p2-mid">
+                <div>
+                  <div class="avatar-lime">FOTO 1:1</div>
+                  <h2 class="p2-hello">
+                    ¡Hola! Mi<br />
+                    nombre es<br />
+                    Ariel Parra.
+                  </h2>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <a class="sq-btn interactive-el" href="https://www.linkedin.com/in/sebastian-parra-784619278" target="_blank" rel="noopener" title="Abrir LinkedIn">in</a>
+                  <div class="visual-frame p2-bleed-art">
+                    <button class="sq-btn interactive-el" type="button" style="position: absolute; top: 0; left: 0; border: 1px solid rgba(255,255,255,0.2);" data-modal-title="Excelencia Académica & Técnica (UDLA)" data-modal-body="Becario al 100% por Excelencia Académica en la UDLA, Becario de la Fundación Patricio Andrade Marín y 2 veces Mejor Promedio de toda la carrera (2025-10 y 2025-20).">+</button>
+                    <svg viewBox="0 0 260 210" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="260" height="210" fill="#12161f"/>
+                      <circle cx="135" cy="105" r="72" stroke="#e2e8f0" stroke-width="1.2" fill="none"/>
+                      <circle cx="135" cy="105" r="52" stroke="#8be810" stroke-width="1.4" fill="none"/>
+                      <circle cx="135" cy="105" r="30" stroke="#94a3b8" stroke-width="1.2" fill="none"/>
+                    </svg>
+                    <span class="slot-caption">[ BOCETO: RENDER 3D / HARDWARE ]</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p2-bot">
+                <p style="color: var(--text-body);">
+                  Mi objetivo es desarrollar mi <strong>Trabajo de Titulación (Tesis)</strong> en una planta industrial, entregando soluciones medibles en automatización, SCADA o retrofitting junto a equipos multidisciplinarios.
+                </p>
+                <p style="font-weight: 700; color: var(--navy-ink);">
+                  Estudiante de 7.º Semestre (Beca 100% Excelencia UDLA y 2x Mejor Promedio) enfocado en resolver cuellos de botella en planta.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               PÁGINA 03: CERTIFICACIONES Y SKILLS (RIGHT SPREAD)
+               ================================================================ -->
+          <div class="brochure-page page-right" data-density="soft">
+            <div class="page-inner">
+              <!-- Cross-spine bleed strip matching Page 2 (just like Screenshot 2!) -->
+              <div class="p3-spine-bleed" aria-hidden="true"></div>
+              <span class="folio-num">03</span>
+
+              <div class="p3-top">
+                <div style="font-weight: 700; font-size: 0.74rem; line-height: 1.3;">
+                  Certificaciones<br />Profesionales &amp;<br />Distinciones
+                </div>
+
+                <div class="cert-list">
+                  <div>
+                    <div class="u-title">Aplicaciones de LOGO! SIEMENS en la Industria &amp; TIA Portal</div>
+                    <p>Organización: Universidad de Las Américas (UDLA) | Fecha: Julio 2024<br />
+                    Control discreto, automatización de secuencias e integración industrial.</p>
+                  </div>
+                  <div>
+                    <div class="u-title">Autodesk Inventor 2025 (40h) &amp; Arduino Certification Program</div>
+                    <p>Organización: Certificación Técnica / Arduino | Fecha: Feb – Ago 2025<br />
+                    Modelado paramétrico 2D/3D, ensamblajes mecánicos y sistemas embebidos.</p>
+                  </div>
+                  <div>
+                    <div class="u-title">Python Essentials 1 &amp; 2 (Cisco) + Introduction to AI (IBM)</div>
+                    <p>Organización: Cisco Networking Academy &amp; Coursera | Fecha: Jul – Sep 2024<br />
+                    Visión artificial (Machine Learning), automatización por APIs y datos.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h2 class="p3-title">Skills</h2>
+
+                <div class="p3-grid">
+                  <div class="skill-box">
+                    <div>
+                      <div style="color: var(--text-body);">CAD &amp; Automatización:</div>
+                      <div style="font-weight: 700;">AutoCAD, Inventor, TIA Portal, Ignition</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                      <div class="brand-row"><span class="brand-icon" style="background:#008080;">S7</span><span>SIEMENS TIA</span></div>
+                      <div class="brand-row"><span class="brand-icon">A</span><span>AutoCAD &amp; Inventor</span></div>
+                    </div>
+                  </div>
+
+                  <div class="skill-box">
+                    <div>
+                      <div style="color: var(--text-body);">Programación &amp; Simulación:</div>
+                      <div style="font-weight: 700;">Python, MATLAB, C/C++, Ladder, ROS</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                      <div class="brand-row"><span class="brand-icon" style="background:#c2410c;">M</span><span>MATLAB &amp; LabVIEW</span></div>
+                      <div class="brand-row"><span class="brand-icon" style="background:#1e293b;">Py</span><span>python™ &amp; C/C++</span></div>
+                    </div>
+                  </div>
+
+                  <div class="skill-box" style="justify-content: center; gap: 10px;">
+                    <div>
+                      <div style="color: var(--text-body);">Hardware, Potencia &amp; Redes:</div>
+                      <div style="font-weight: 700;">ESP32, STM32, LoRa, KUKA, VFD, Tableros</div>
+                    </div>
+                    <div>
+                      <div style="color: var(--text-body);">Habilidades Operativas &amp; Idiomas:</div>
+                      <div style="font-weight: 700;">Liderazgo técnico, Diagnóstico MTTR, Inglés B2</div>
+                    </div>
+                  </div>
+
+                  <div class="visual-frame" style="background: #0d1526;">
+                    <svg viewBox="0 0 240 145" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="240" height="145" fill="#0d1526"/>
+                      <circle cx="120" cy="72" r="52" stroke="#94a3b8" stroke-width="2" fill="none"/>
+                      <circle cx="120" cy="72" r="32" stroke="#8be810" stroke-width="1.5" fill="none"/>
+                    </svg>
+                    <span class="slot-caption">[ BOCETO: RENDER 3D DE MOTOR / ROTOR ]</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               PÁGINA 04: EXPERIENCIA PROFESIONAL — CIDFAE (LEFT SPREAD)
+               ================================================================ -->
+          <div class="brochure-page page-left" data-density="soft">
+            <div class="page-inner">
+              <span class="folio-num">04</span>
+
+              <div style="display: grid; grid-template-columns: 38px 1fr; gap: 16px;">
+                <button class="sq-btn interactive-el" type="button" data-modal-title="CIDFAE — Fuerza Aérea Ecuatoriana (I+D)" data-modal-body="Validación de sistemas de propulsión, electrónica de potencia e instrumentación para drones (UAVs) de reconocimiento en condiciones de gran altitud.">+</button>
+                <div>
+                  <div class="u-title" style="font-size: 0.92rem;">CIDFAE — Fuerza Aérea Ecuatoriana</div>
+                  <div style="font-size: 0.86rem; font-weight: 700; margin-bottom: 4px;">Rol: Pasante de I+D en Electrónica y UAVs</div>
+                  <div class="tabular" style="font-size: 0.68rem; color: var(--text-muted);">Pasantía Preprofesional — Centro de Investigación y Desarrollo</div>
+
+                  <ul class="exp-list">
+                    <li>Diseñé y validé prototipos de drones (UAVs) para la Fuerza Aérea, resolviendo retos de sustentación y eficiencia energética en altura para sostener <strong>operaciones de 30 minutos con 2 kg de carga útil</strong>.</li>
+                    <li>Ejecuté pruebas funcionales, instrumentación electrónica y validación de prototipos bajo estándares de alta confiabilidad.</li>
+                    <li>Documenté arquitecturas de hardware y protocolos de prueba, reduciendo tiempos de iteración e integración técnica.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; align-items: end;">
+                <div>
+                  <h2 style="font-family: var(--font-display); font-size: 2.55rem; font-weight: 500; line-height: 1.02; letter-spacing: -0.035em; margin-bottom: 24px;">
+                    Professional<br />
+                    Experience
+                  </h2>
+                  <p style="font-size: 0.69rem; line-height: 1.44; color: var(--text-body);">
+                    Esta sección presenta mi experiencia práctica en investigación aeroespacial, proyectos industriales en campo y liderazgo de laboratorios de ingeniería.
+                  </p>
+                </div>
+
+                <div class="visual-frame" style="height: 225px; background: #131c2e;">
+                  <svg viewBox="0 0 220 225" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="220" height="225" fill="#131c2e"/>
+                    <path d="M25,180 L85,75 L145,140 L195,55" stroke="#8be810" stroke-width="2.5" fill="none"/>
+                  </svg>
+                  <span class="slot-caption">[ BOCETO: FOTO EN CAMPO / CIDFAE ]</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               PÁGINA 05: VATIOTEC & UDLA FUTURE MAKERS (RIGHT SPREAD)
+               ================================================================ -->
+          <div class="brochure-page page-right" data-density="soft">
+            <div class="page-inner">
+              <span class="folio-num">05</span>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div style="display: grid; grid-template-columns: 38px 1fr; gap: 10px;">
+                  <button class="sq-btn interactive-el" type="button" data-modal-title="Vatiotec — Tableros e Instalaciones Eléctricas" data-modal-body="Diseño y armado de tableros industriales de fuerza, control y protección, optimizando instalaciones eléctricas y reduciendo tiempos de diagnóstico (MTTR).">+</button>
+                  <div>
+                    <div class="u-title">Vatiotec Ingeniería</div>
+                    <div style="font-size: 0.72rem; font-weight: 700;">Rol: Pasante Técnico Eléctrico</div>
+                    <div style="font-size: 0.62rem; color: var(--text-muted);">Proyectos Industriales</div>
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 38px 1fr; gap: 10px;">
+                  <button class="sq-btn interactive-el" type="button" data-modal-title="UDLA — Ayudante de Cátedra & Future Makers" data-modal-body="Guié laboratorios de Electrónica, Programación y Robótica, y diseñé piezas 3D en software CAD para optimizar el equipamiento técnico y su ergonomía.">+</button>
+                  <div>
+                    <div class="u-title">UDLA &amp; Future Makers</div>
+                    <div style="font-size: 0.72rem; font-weight: 700;">Rol: Ayudante de Cátedra &amp; CAD</div>
+                    <div style="font-size: 0.62rem; color: var(--text-muted);">2026-10 – Presente</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 140px 1fr; gap: 12px; flex: 1; margin-top: 16px;">
+                <div style="display: flex; flex-direction: column; gap: 10px; justify-content: space-between;">
+                  <div class="visual-frame" style="height: 215px; background: #090d16;">
+                    <span class="slot-caption">[ BOCETO: PIEZA CAD 3D ]</span>
+                  </div>
+                  <div class="visual-frame" style="height: 140px; background: #1e293b;">
+                    <span class="slot-caption">[ BOCETO: TABLERO ]</span>
+                  </div>
+                  <div>
+                    <div style="font-size: 0.65rem;">Mi expertise (Vatiotec):</div>
+                    <ul class="arrow-small">
+                      <li>⇾ tableros de fuerza/control</li>
+                      <li>⇾ protecciones eléctricas</li>
+                      <li>⇾ reducción de MTTR</li>
+                      <li>⇾ cableado estructurado</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                  <div style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 10px; align-items: start; margin-top: 36px;">
+                    <div class="visual-frame" style="height: 130px; background: #e5e7eb;">
+                      <span class="slot-caption">[ BOCETO: ENSAMBLAJE 3D ]</span>
+                    </div>
+                    <div>
+                      <div style="font-size: 0.65rem;">Mi expertise (UDLA):</div>
+                      <ul class="arrow-small" style="font-weight: 700;">
+                        <li>⇾ robótica y código</li>
+                        <li>⇾ piezas 3D en CAD</li>
+                        <li>⇾ ergonomía técnica</li>
+                        <li>⇾ guías de laboratorio</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="visual-frame" style="height: 215px; background: #0f172a;">
+                    <span class="slot-caption">[ BOCETO: FOTO EN LABORATORIO / MONTAJE INDUSTRIAL ]</span>
+                  </div>
+
+                  <div style="text-align: right; font-family: var(--font-display); font-size: 1.8rem; font-weight: 500; letter-spacing: -0.03em;">
+                    Ariel Parra Pérez
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               PÁGINA 06: TECHNICAL DRAWINGS & SCHEMATICS (LEFT SPREAD)
+               ================================================================ -->
+          <div class="brochure-page page-left" data-density="soft">
+            <div class="page-inner">
+              <span class="folio-num">06</span>
+
+              <div style="display: grid; grid-template-columns: 0.7fr 1fr 1fr; gap: 16px; font-size: 0.69rem; line-height: 1.44; color: var(--text-body);">
+                <div></div>
+                <div>
+                  Estos planos eléctricos y modelos CAD 3D reflejan mi capacidad para producir ingeniería de detalle que no solo es precisa en simulación, sino <strong>directamente aplicable al montaje de tableros, manufactura y puesta en marcha en planta.</strong>
+                </div>
+                <div>
+                  Esta sección presenta una selección de esquemas de fuerza y control (CADe-SIMU / AutoCAD) y modelado 3D (Autodesk Inventor 2025).<br /><br />
+                  Cada plano cumple estándares industriales de seguridad y selectividad.
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 16px; align-items: end;">
+                <h2 style="font-family: var(--font-display); font-size: 2.55rem; font-weight: 600; line-height: 1.02; letter-spacing: -0.035em; color: #262626;">
+                  Technical<br />
+                  Drawings &amp;<br />
+                  Schematics
+                </h2>
+
+                <p style="font-size: 0.69rem; line-height: 1.44;">
+                  Cada diseño demuestra mi capacidad para entregar <strong>planos As-Built precisos y listos para planta</strong> bajo <span style="text-decoration: underline;">normativa eléctrica y mejores prácticas.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               PÁGINA 07: GALERÍA DE PLANOS Y MODELADO 3D (RIGHT SPREAD)
+               ================================================================ -->
+          <div class="brochure-page page-right" data-density="soft">
+            <div class="page-inner">
+              <span class="folio-num">07</span>
+
+              <div style="display: grid; grid-template-columns: 1.05fr 1fr; gap: 12px; height: 100%;">
+                <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 10px;">
+                  <div class="visual-frame" style="height: 220px; background: #eef1f5;">
+                    <button class="sq-btn interactive-el" type="button" style="position: absolute; top: 0; left: 0;" data-modal-title="Diseño Detallado de Componentes (Inventor 2025)" data-modal-body="Vistas explosionadas, tolerancias de ensamblaje y diseño de piezas 3D para equipamiento de laboratorio y robótica.">+</button>
+                    <svg viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="240" height="220" fill="#eef1f5"/>
+                      <line x1="30" y1="180" x2="210" y2="45" stroke="#1e293b" stroke-dasharray="5,3"/>
+                      <ellipse cx="95" cy="135" rx="20" ry="32" transform="rotate(-30 95 135)" fill="#cbd5e1" stroke="#0f172a"/>
+                      <ellipse cx="140" cy="100" rx="20" ry="32" transform="rotate(-30 140 100)" fill="#94a3b8" stroke="#0f172a"/>
+                    </svg>
+                    <span class="slot-caption">[ BOCETO: VISTA EXPLOSIONADA INVENTOR ]</span>
+                  </div>
+
+                  <div class="visual-frame" style="height: 285px; background: #f4f6f9;">
+                    <button class="sq-btn interactive-el" type="button" style="position: absolute; bottom: 0; right: 0;" data-modal-title="Esquemas de Fuerza y Control (CADe-SIMU / AutoCAD)" data-modal-body="Planos eléctricos de arranque y protección de motores con contactores, relés térmicos, arrancadores suaves y variadores de frecuencia.">+</button>
+                    <svg viewBox="0 0 240 285" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="240" height="285" fill="#f4f6f9"/>
+                      <g stroke="#0f172a" stroke-width="1.5" fill="none">
+                        <line x1="70" y1="25" x2="70" y2="220"/>
+                        <line x1="120" y1="25" x2="120" y2="220"/>
+                        <line x1="170" y1="25" x2="170" y2="220"/>
+                        <circle cx="120" cy="220" r="24" fill="#cbd5e1"/>
+                      </g>
+                    </svg>
+                    <span class="slot-caption">[ BOCETO: PLANO ELÉCTRICO CADE-SIMU ]</span>
+                  </div>
+
+                  <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 0.7rem;">
+                    <span>Esquemas de<br />Fuerza y Control</span>
+                    <span>Diagramas de Flujo<br />&amp; Red SCADA</span>
+                  </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 10px;">
+                  <div style="font-weight: 700; font-size: 0.7rem;">Diseño Detallado<br />de Componentes</div>
+                  <div style="font-weight: 700; font-size: 0.7rem;">Modelado 3D &amp;<br />Visualización CAD</div>
+
+                  <div class="visual-frame" style="height: 125px; background: var(--blueprint-blue);">
+                    <button class="sq-btn interactive-el" type="button" style="position: absolute; bottom: 0; right: 0;" data-modal-title="Blueprint Técnico AutoCAD" data-modal-body="Levantamiento de planos As-Built para actualización de tableros industriales antiguos.">+</button>
+                    <svg viewBox="0 0 220 125" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="220" height="125" fill="#265999"/>
+                      <circle cx="80" cy="62" r="34" stroke="rgba(255,255,255,0.65)" fill="none"/>
+                      <circle cx="145" cy="62" r="26" stroke="rgba(255,255,255,0.65)" fill="none"/>
+                    </svg>
+                    <span class="slot-caption">[ BOCETO: BLUEPRINT AUTOCAD ]</span>
+                  </div>
+
+                  <div class="visual-frame" style="flex: 1; background: #0c0f14;">
+                    <button class="sq-btn sq-btn-white interactive-el" type="button" style="position: absolute; top: 0; left: 0;" data-modal-title="Arquitectura SCADA, PLC & Telemetría LoRa" data-modal-body="Integración de sensores de campo, microcontroladores ESP32/STM32 y PLCs Siemens S7 hacia dashboards en Ignition SCADA.">+</button>
+                    <svg viewBox="0 0 220 340" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="220" height="340" fill="#0c0f14"/>
+                      <rect x="40" y="70" width="140" height="120" stroke="rgba(255,255,255,0.45)" fill="none"/>
+                      <line x1="25" y1="250" x2="195" y2="250" stroke="#8be810" stroke-width="1.5"/>
+                    </svg>
+                    <span class="slot-caption">[ BOCETO: ESQUEMA WIREFRAME SCADA / LORA ]</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               PÁGINA 08: PROJECT SUMMARY ⇢ (LEFT SPREAD)
+               ================================================================ -->
+          <div class="brochure-page page-left" data-density="soft">
+            <div class="page-inner">
+              <span class="folio-num">08</span>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.69rem; line-height: 1.44; color: var(--text-body);">
+                <div>
+                  <p>
+                    Mis proyectos integran <strong>control automático, electrónica de potencia, visión artificial y telemetría LoRa</strong> para elevar la eficiencia operativa y reducir tiempos de paro.
+                  </p>
+                  <br />
+                  <p>
+                    Busco desarrollar mi <strong>Tesis de Ingeniería</strong> dentro de su planta industrial sin costo de honorarios de consultoría.
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    Cada prototipo fue validado con modelado CAD 3D, simulación en TIA Portal / CADe-SIMU / MATLAB y pruebas físicas con PLCs Siemens/Schneider, obteniendo el <strong>2.º y 3.er Lugar en el concurso universitario Ingennials (UDLA)</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; align-items: end;">
+                <div>
+                  <h2 style="font-family: var(--font-display); font-size: 2.65rem; font-weight: 500; line-height: 1.04; letter-spacing: -0.035em; margin-bottom: 14px;">
+                    Project<br />
+                    Summary ⇢
+                  </h2>
+
+                  <div class="u-title" style="font-size: 0.78rem; margin-bottom: 24px;">
+                    Optimización y Automatización de Procesos en Planta
+                  </div>
+
+                  <p style="font-size: 0.69rem; line-height: 1.44; color: var(--text-body);">
+                    Incrementar el OEE, la confiabilidad eléctrica y la trazabilidad de datos de una línea industrial existente para reducir merma y consumo energético.
+                  </p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <button class="sq-btn interactive-el" type="button" data-modal-title="3 Líneas de Tesis Propuestas para Planta" data-modal-body="1) Monitoreo OEE/SCADA en tiempo real (Ignition + PLCs + IIoT). 2) Retrofitting de tableros y variadores de frecuencia (TIA Portal + AutoCAD). 3) Inspección de calidad en línea con Visión Artificial (Python ML + Actuadores).">▷</button>
+                  <div class="visual-frame" style="height: 185px; background: #0d121c;">
+                    <span class="slot-caption">[ BOCETO: DETALLE DE HARDWARE / PLANTA ]</span>
+                  </div>
+                  <ul class="arrow-small" style="font-weight: 700;">
+                    <li>⇢ Clasificador con Visión Artificial (ML)</li>
+                    <li>⇢ Red de Potencia Dimerizable LoRa</li>
+                    <li>⇢ Tableros de Fuerza y Control Industrial</li>
+                    <li>⇢ Monitoreo IIoT, Hexápodo &amp; VICTUS IA</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               PÁGINA 09: DETALLE INTERACTIVO DE PROYECTOS 01–06 (RIGHT SPREAD)
+               ================================================================ -->
+          <div class="brochure-page page-right" data-density="soft">
+            <div class="page-inner">
+              <span class="folio-num">09</span>
+
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                  <div>
+                    <div style="font-family: var(--font-mono); font-size: 0.56rem; color: var(--text-muted);">
+                      ALTERNAR PROYECTO (01–06):
+                    </div>
+                    <div class="mini-tabs">
+                      <button class="mini-tab interactive-el active" type="button" data-idx="01">01 ML</button>
+                      <button class="mini-tab interactive-el" type="button" data-idx="02">02 LORA</button>
+                      <button class="mini-tab interactive-el" type="button" data-idx="03">03 TABLEROS</button>
+                      <button class="mini-tab interactive-el" type="button" data-idx="04">04 CIDFAE</button>
+                      <button class="mini-tab interactive-el" type="button" data-idx="05">05 HEXÁPODO</button>
+                      <button class="mini-tab interactive-el" type="button" data-idx="06">06 IIoT/IA</button>
+                    </div>
+                  </div>
+
+                  <p id="p9TopCopy" style="font-size: 0.68rem; line-height: 1.4; max-width: 225px; color: var(--text-body);">
+                    Sistema automatizado para clasificación de materiales en línea, integrando algoritmos de Machine Learning (visión artificial) y control electromecánico sincronizado.
+                  </p>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1.15fr; gap: 16px; align-items: center;">
+                <div class="visual-frame" style="height: 155px; background: #f8fafc; border: 1px solid rgba(6,15,42,0.1);">
+                  <span class="slot-caption" id="p9SmallCaption">[ BOCETO: CÁMARA + ACTUADOR ]</span>
+                </div>
+
+                <div style="text-align: right;">
+                  <div id="p9Number" class="tabular" style="font-family: var(--font-display); font-size: 3.6rem; font-weight: 500; line-height: 1; letter-spacing: -0.04em;">01</div>
+                  <div id="p9Title" style="font-size: 0.76rem; font-weight: 700; margin: 4px 0;">Reciclador Inteligente con ML</div>
+                  <p id="p9SubCopy" style="font-size: 0.66rem; line-height: 1.38; color: var(--text-body);">
+                    Escalable a líneas industriales de empaque para inspección visual de calidad y descarte automático de defectos.
+                  </p>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px; height: 245px;">
+                <div class="visual-frame" style="background: #1e293b;">
+                  <span class="slot-caption">[ BOCETO: CHASIS ]</span>
+                </div>
+                <div class="visual-frame" style="background: #060b16;">
+                  <span class="slot-caption" id="p9MainCaption">[ BOCETO: FOTO PRINCIPAL DEL PROYECTO EN FUNCIONAMIENTO ]</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               PÁGINA 10: CONTRAPORTADA DE CONTACTO (NAVY BACK COVER)
+               ================================================================ -->
+          <div class="brochure-page page-navy page-cover-back" data-density="soft">
+            <div class="page-inner">
+              <span class="folio-num">10</span>
+
+              <div class="p1-top">
+                Ingeniería en Electrónica y Automatización<br />
+                <strong>Ariel Parra Pérez</strong>
+              </div>
+
+              <div style="margin-top: 44px;">
+                <div style="font-size: 0.74rem; margin-bottom: 12px; color: rgba(255,255,255,0.86);">
+                  Información de contacto (Disponibilidad para Tesis Industrial):
+                </div>
+                <div class="tabular" style="font-family: var(--font-display); font-size: 1.85rem; font-weight: 500; line-height: 1.22; letter-spacing: -0.03em;">
+                  <div><a class="interactive-el" href="tel:+593987687053" style="color:#fff; text-decoration:none;">+593 98 768 7053</a></div>
+                  <div><a class="interactive-el" href="mailto:sebasparra676@gmail.com" style="color:#fff; text-decoration:none;">sebasparra676@gmail.com</a></div>
+                  <div style="font-size: 1.45rem;"><a class="interactive-el" href="https://www.linkedin.com/in/sebastian-parra-784619278" target="_blank" rel="noopener" style="color:var(--lime-accent); text-decoration:none;">in/sebastian-parra-784619278</a></div>
+                </div>
+              </div>
+
+              <div class="p1-gallery" style="height: 225px;">
+                <div class="visual-frame" style="background: #cbd5e1;">
+                  <span class="slot-caption">[ BOCETO: CONEXIÓN NEUMÁTICA / PLC ]</span>
+                </div>
+                <div class="visual-frame" style="background: #e2e8f0;">
+                  <span class="slot-caption">[ BOCETO: DETALLE PCB / TABLERO ]</span>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px;">
+                <span class="lime-sq" style="transform: none; margin: 0;"></span>
+                <span class="p1-sig">Ariel Parra Pérez</span>
+              </div>
+            </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM SPREAD SELECTOR DOCK + DESCARGAR CV HARVARD -->
+    <footer class="viewer-footer">
+      <div class="spread-dots" role="tablist" aria-label="Ir a página del folleto">
+        <button class="spread-dot active" type="button" data-page="0">P.01 PORTADA</button>
+        <button class="spread-dot" type="button" data-page="1">P.02–03 PERFIL &amp; SKILLS</button>
+        <button class="spread-dot" type="button" data-page="3">P.04–05 EXPERIENCIA</button>
+        <button class="spread-dot" type="button" data-page="5">P.06–07 PLANOS &amp; CAD</button>
+        <button class="spread-dot" type="button" data-page="7">P.08–09 PROYECTOS</button>
+        <button class="spread-dot" type="button" data-page="9">P.10 CONTACTO</button>
+      </div>
+      <a class="ctrl-btn ctrl-btn-lime" href="CV_ARIEL_PARRA.pdf" target="_blank">DESCARGAR CV</a>
+    </footer>
+  </div>
+
+  <!-- MODAL FOR "+" TECHNICAL INSPECTOR BUTTONS -->
+  <div class="modal-backdrop" id="specModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px;">
+        <h3 id="modalTitle" style="font-family: var(--font-display); font-size: 1.25rem;">Ficha Técnica</h3>
+        <button class="sq-btn" id="closeModal" type="button" style="width: 34px; height: 34px; font-size: 1.1rem;">×</button>
+      </div>
+      <p id="modalBody" style="font-size: 0.94rem; line-height: 1.55; color: var(--text-body); margin-bottom: 16px;"></p>
+      <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);">
+        [ BOCETO: AQUÍ SE PUEDE AMPLIAR EL PLANO ELÉCTRICO O RENDER 3D EN ALTA RESOLUCIÓN ]
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. INICIALIZAR STPAGEFLIP (CURVATURA REAL DE PAPEL COMO EN LA IMAGEN 3)
+    // =========================================================================
+    const flipbookEl = document.getElementById('flipbook');
+    const flipbookFrame = document.getElementById('flipbookFrame');
+    const spreadDots = Array.from(document.querySelectorAll('.spread-dot'));
+
+    // Stop propagation on interactive buttons so clicking [+], [in], or [01-06] doesn't trigger a page flip
+    document.querySelectorAll('.interactive-el').forEach((el) => {
+      ['mousedown', 'pointerdown', 'touchstart', 'click'].forEach((evt) => {
+        el.addEventListener(evt, (e) => e.stopPropagation());
+      });
+    });
+
+    const pageFlip = new St.PageFlip(flipbookEl, {
+      width: 500,
+      height: 707,
+      size: 'fixed',
+      showCover: true,
+      usePortrait: false,
+      maxShadowOpacity: 0.55,
+      flippingTime: 850,
+      mobileScrollSupport: false,
+      drawShadow: true,
+      autoSize: false
+    });
+
+    pageFlip.loadFromHTML(document.querySelectorAll('.brochure-page'));
+
+    function updateBookUI(pageIndex) {
+      // Center single cover pages (Page 0 = Front Cover on right half, Page 9 = Back Cover on left half)
+      if (pageIndex === 0) {
+        flipbookFrame.style.transform = 'translateX(-25%)';
+        setActiveDot(0);
+      } else if (pageIndex >= 9) {
+        flipbookFrame.style.transform = 'translateX(25%)';
+        setActiveDot(5);
+      } else {
+        flipbookFrame.style.transform = 'translateX(0%)';
+        const spreadIdx = Math.ceil(pageIndex / 2);
+        setActiveDot(spreadIdx);
+      }
+    }
+
+    function setActiveDot(activeIdx) {
+      spreadDots.forEach((dot, i) => dot.classList.toggle('active', i === activeIdx));
+    }
+
+    pageFlip.on('flip', (e) => {
+      updateBookUI(e.data);
+    });
+
+    spreadDots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const targetPage = Number(dot.getAttribute('data-page'));
+        pageFlip.flip(targetPage, 'bottom');
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') pageFlip.flipNext('bottom');
+      if (e.key === 'ArrowLeft') pageFlip.flipPrev('bottom');
+    });
+
+    // Auto-scale stage so the 1000x707 brochure always fits the screen height cleanly + Slider de Zoom & Pan con Rueda del Ratón
+    const stageWrapper = document.getElementById('stageWrapper');
+    const stageCanvas = document.getElementById('stageCanvas');
+    const zoomSlider = document.getElementById('zoomSlider');
+    const zoomResetBtn = document.getElementById('zoomResetBtn');
+    let baseScale = 1;
+    let userZoom = 1.0;
+    let panX = 0;
+    let panY = 0;
+    const MIN_ZOOM = 0.5;
+    const MAX_ZOOM = 2.2;
+
+    function applyStageTransform() {
+      const finalScale = baseScale * userZoom;
+      const pctValue = Math.round(userZoom * 100);
+      const fillRatio = ((userZoom - MIN_ZOOM) / (MAX_ZOOM - MIN_ZOOM)) * 100;
+      stageCanvas.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${finalScale})`;
+      zoomSlider.value = String(pctValue);
+      zoomSlider.style.setProperty('--zoom-pct', `${Math.max(0, Math.min(100, fillRatio))}%`);
+      zoomResetBtn.textContent = `${pctValue} %`;
+    }
+
+    function fitBookToViewport() {
+      const availW = stageWrapper.clientWidth - 40;
+      const availH = stageWrapper.clientHeight - 24;
+      baseScale = Math.min(availW / 1000, availH / 707, 1.14);
+      applyStageTransform();
+    }
+
+    zoomSlider.addEventListener('input', (e) => {
+      userZoom = Number(e.target.value) / 100;
+      if (userZoom <= 1.0) {
+        panX = 0;
+        panY = 0;
+      }
+      applyStageTransform();
+    });
+
+    zoomResetBtn.addEventListener('click', () => {
+      userZoom = 1.0;
+      panX = 0;
+      panY = 0;
+      applyStageTransform();
+    });
+
+    // Permitir también zoom girando la rueda del ratón sobre el lienzo
+    stageWrapper.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.08 : -0.08;
+      userZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round((userZoom + delta) * 100) / 100));
+      if (userZoom <= 1.0) {
+        panX = 0;
+        panY = 0;
+      }
+      applyStageTransform();
+    }, { passive: false });
+
+    // Sistema de Arrastrar al pulsar y mantener la RUEDA DEL RATÓN (button === 1) o Click Derecho (button === 2)
+    let isPanning = false;
+    let startMouseX = 0;
+    let startMouseY = 0;
+    let startPanX = 0;
+    let startPanY = 0;
+
+    // Evitar el icono nativo de autoscroll o menú contextual al arrastrar en el lienzo
+    stageWrapper.addEventListener('auxclick', (e) => {
+      if (e.button === 1) e.preventDefault();
+    });
+    stageWrapper.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+
+    function onPanStart(e) {
+      if (!stageWrapper.contains(e.target)) return;
+      // Activar arrastre al pulsar la rueda del ratón (button === 1) o click derecho (button === 2)
+      if (e.button !== 1 && e.button !== 2) return;
+
+      // IMPORTANTE: preventDefault en mousedown evita el autoscroll nativo sin bloquear mousemove
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      isPanning = true;
+      stageWrapper.classList.add('is-panning');
+      startMouseX = e.clientX;
+      startMouseY = e.clientY;
+      startPanX = panX;
+      startPanY = panY;
+    }
+
+    function onPanMove(e) {
+      if (!isPanning) return;
+      // Si se soltó el botón fuera de la ventana, detener el arrastre
+      if (e.buttons !== undefined && (e.buttons & 4) === 0 && (e.buttons & 2) === 0) {
+        onPanEnd();
+        return;
+      }
+      panX = startPanX + (e.clientX - startMouseX);
+      panY = startPanY + (e.clientY - startMouseY);
+      applyStageTransform();
+    }
+
+    function onPanEnd() {
+      if (!isPanning) return;
+      isPanning = false;
+      stageWrapper.classList.remove('is-panning');
+    }
+
+    // Usar exclusivamente mousedown/mousemove/mouseup (sin pointerdown.preventDefault que cancela mousemove en Chromium)
+    window.addEventListener('mousedown', onPanStart, { capture: true });
+    window.addEventListener('mousemove', onPanMove, { passive: true });
+    window.addEventListener('mouseup', onPanEnd, { capture: true });
+    window.addEventListener('blur', onPanEnd);
+
+    window.addEventListener('resize', fitBookToViewport);
+    updateBookUI(0);
+    fitBookToViewport();
+
+    // =========================================================================
+    // 2. CONMUTADOR DE PROYECTOS (01–06) EN LA PÁGINA 09
+    // =========================================================================
+    const projectCases = {
+      "01": {
+        title: "Reciclador Inteligente con ML",
+        topCopy: "Sistema automatizado para clasificación de materiales en línea, integrando algoritmos de Machine Learning (visión artificial) y control electromecánico sincronizado.",
+        subCopy: "Escalable a líneas industriales de empaque para inspección visual de calidad y descarte automático de defectos.",
+        smallCap: "[ BOCETO: CÁMARA + ACTUADOR ]",
+        mainCap: "[ BOCETO: FOTO PRINCIPAL DEL CLASIFICADOR CON VISIÓN ARTIFICIAL ]"
+      },
+      "02": {
+        title: "Red Dimerizable con ESP32 y LoRa",
+        topCopy: "Diseño de un sistema electrónico de regulación lumínica automática utilizando microcontroladores ESP32, etapas de potencia y comunicación LoRa de largo alcance.",
+        subCopy: "Aplicable a naves industriales y patios logísticos para ahorro energético sin cableado de red adicional.",
+        smallCap: "[ BOCETO: ETAPA DE POTENCIA + LORA ]",
+        mainCap: "[ BOCETO: TOPOLOGÍA DE RED LORA Y PROTOTIPO ELECTRÓNICO ]"
+      },
+      "03": {
+        title: "Tableros Industriales de Fuerza y Control",
+        topCopy: "Dimensionamiento e implementación de tableros para secuencias de arranque, marcha y paro de motores con contactores, relés y variadores Siemens/Schneider.",
+        subCopy: "Estandarización bajo normativa eléctrica para proteger activos y reducir tiempos de diagnóstico (MTTR).",
+        smallCap: "[ BOCETO: CONTACTORES Y VARIADOR VFD ]",
+        mainCap: "[ BOCETO: FOTO REAL DE TABLERO DE FUERZA Y CONTROL CABLEADO ]"
+      },
+      "04": {
+        title: "Validación de Drones (UAVs) — CIDFAE",
+        topCopy: "I+D en la Fuerza Aérea Ecuatoriana (CIDFAE), optimizando propulsión, distribución de potencia y sustentación de UAVs operando en gran altitud.",
+        subCopy: "Validación experimental sosteniendo operaciones continuas de 30 minutos de vuelo con 2 kg de carga útil.",
+        smallCap: "[ BOCETO: BANCO DE PRUEBAS UAV ]",
+        mainCap: "[ BOCETO: PROTOTIPO UAV EN LABORATORIO CIDFAE ]"
+      },
+      "05": {
+        title: "Robot Hexápodo & Piezas CAD 3D",
+        topCopy: "Modelado en Autodesk Inventor 2025, ensamblaje y programación cinemática de un robot hexápodo servocontrolado, y piezas 3D ergonómicas para laboratorios UDLA.",
+        subCopy: "Dominio de control multieje, cinemática robótica (KUKA/ROS) y manufactura aditiva para prototipado rápido.",
+        smallCap: "[ BOCETO: ARTICULACIÓN CAD 3D ]",
+        mainCap: "[ BOCETO: RENDER / FOTO DEL ROBOT HEXÁPODO ]"
+      },
+      "06": {
+        title: "Monitoreo IIoT & Asistente VICTUS IA",
+        topCopy: "Estación de instrumentación ambiental con visualización web en tiempo real para riego automatizado, complementada con el asistente VICTUS IA en Python.",
+        subCopy: "Base para captura de datos OEE, integración con Ignition SCADA/Power BI y automatización por APIs.",
+        smallCap: "[ BOCETO: SENSORES + ADQUISICIÓN ]",
+        mainCap: "[ BOCETO: DASHBOARD WEB EN TIEMPO REAL & VICTUS IA ]"
+      }
+    };
+
+    document.querySelectorAll('.mini-tab').forEach((tab) => {
+      tab.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.mini-tab').forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+        const idx = tab.getAttribute('data-idx');
+        const d = projectCases[idx];
+        if (d) {
+          document.getElementById('p9Number').textContent = idx;
+          document.getElementById('p9Title').textContent = d.title;
+          document.getElementById('p9TopCopy').textContent = d.topCopy;
+          document.getElementById('p9SubCopy').textContent = d.subCopy;
+          document.getElementById('p9SmallCaption').textContent = d.smallCap;
+          document.getElementById('p9MainCaption').textContent = d.mainCap;
+        }
+      });
+    });
+
+    // =========================================================================
+    // 3. MODAL PARA LOS BOTONES CUADRADOS "+"
+    // =========================================================================
+    const modal = document.getElementById('specModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const closeModal = document.getElementById('closeModal');
+
+    document.querySelectorAll('[data-modal-title]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        modalTitle.textContent = btn.getAttribute('data-modal-title');
+        modalBody.textContent = btn.getAttribute('data-modal-body');
+        modal.classList.add('open');
+      });
+    });
+
+    closeModal.addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('open');
+    });
+  </script>
+</body>
+</html>
