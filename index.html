@@ -58,23 +58,28 @@
        2. TOP BAR & BOTTOM BROCHURE CONTROLS
        ========================================================================== */
     .viewer-shell {
+      position: relative;
       width: 100vw;
       height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      padding: 12px 24px 16px;
+      overflow: hidden;
     }
 
     .viewer-header {
-      width: 100%;
-      max-width: 1180px;
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      max-width: calc(100vw - 32px);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      z-index: 80;
+      z-index: 120;
     }
 
     .zoom-dock {
@@ -233,14 +238,18 @@
     }
 
     .viewer-footer {
-      width: 100%;
-      max-width: 1180px;
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: calc(100vw - 24px);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
       gap: 10px;
-      z-index: 80;
+      z-index: 120;
     }
 
     .spread-dots {
@@ -285,12 +294,15 @@
     .stage-wrapper {
       position: relative;
       flex: 1;
+      min-height: 0;
       width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: default;
       user-select: none;
+      overflow: hidden;
     }
 
     .stage-wrapper.is-panning {
@@ -1417,8 +1429,8 @@
     }
 
     function fitBookToViewport() {
-      const availW = stageWrapper.clientWidth - 40;
-      const availH = stageWrapper.clientHeight - 24;
+      const availW = window.innerWidth - 48;
+      const availH = window.innerHeight - 126;
       baseScale = Math.min(availW / 1000, availH / 707, 1.14);
       applyStageTransform();
     }
