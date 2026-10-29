@@ -61,6 +61,7 @@
       position: relative;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -171,7 +172,7 @@
     }
 
     .zoom-readout {
-      min-width: 48px;
+      min-width: 58px;
       padding: 2px 4px;
       border: none;
       background: transparent;
@@ -180,6 +181,8 @@
       font-size: 0.92rem;
       font-weight: 500;
       text-align: left;
+      white-space: nowrap;
+      flex-shrink: 0;
       cursor: pointer;
       font-variant-numeric: tabular-nums;
       transition: color 140ms var(--ease-out-strong);
@@ -256,11 +259,19 @@
       display: flex;
       align-items: center;
       gap: 5px;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
       background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(8px);
       padding: 5px 8px;
       border: 1px solid rgba(6, 15, 42, 0.1);
       box-shadow: 0 4px 16px rgba(6, 15, 42, 0.06);
+    }
+
+    .spread-dots::-webkit-scrollbar {
+      display: none;
     }
 
     .spread-dot {
@@ -272,6 +283,8 @@
       font-size: 0.74rem;
       font-weight: 500;
       letter-spacing: -0.02em;
+      white-space: nowrap;
+      flex-shrink: 0;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 140ms var(--ease-out-strong);
@@ -302,6 +315,7 @@
       justify-content: center;
       cursor: default;
       user-select: none;
+      touch-action: none;
       overflow: hidden;
     }
 
@@ -742,6 +756,69 @@
       border-top: 5px solid var(--lime-accent);
       box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
     }
+
+    /* Adaptación Responsiva para Celulares / Pantallas Táctiles */
+    @media (max-width: 768px) {
+      .viewer-header {
+        top: 8px;
+        max-width: calc(100vw - 16px);
+      }
+
+      .zoom-dock {
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(8px);
+        padding: 4px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(6, 15, 42, 0.08);
+        box-shadow: 0 2px 10px rgba(6, 15, 42, 0.06);
+        gap: 10px;
+      }
+
+      .zoom-track-wrap {
+        width: 140px;
+      }
+
+      .zoom-readout {
+        font-size: 0.84rem;
+        min-width: 50px;
+      }
+
+      .viewer-footer {
+        bottom: 8px;
+        width: calc(100vw - 16px);
+        max-width: calc(100vw - 16px);
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .spread-dots {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 5px 6px;
+      }
+
+      .spread-dot {
+        height: 28px;
+        padding: 0 10px;
+        font-size: 0.7rem;
+      }
+
+      .ctrl-btn {
+        height: 34px;
+        padding: 0 18px;
+        font-size: 0.74rem;
+      }
+
+      .modal-backdrop {
+        padding: 12px;
+      }
+
+      .modal-card {
+        padding: 18px;
+        max-height: 88dvh;
+        overflow-y: auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -756,7 +833,7 @@
             id="zoomSlider"
             type="range"
             min="50"
-            max="220"
+            max="280"
             step="1"
             value="100"
             aria-label="Porcentaje de zoom"
@@ -1351,7 +1428,10 @@
     }
     ensureSilentVideosPlaying();
 
+    let currentPageIndex = 0;
+
     function updateBookUI(pageIndex) {
+      currentPageIndex = pageIndex;
       // Center single cover pages (Page 0 = Front Cover on right half, Page 9 = Back Cover on left half)
       if (pageIndex === 0) {
         flipbookFrame.style.transform = 'translateX(-25%)';
@@ -1364,10 +1444,27 @@
         const spreadIdx = Math.ceil(pageIndex / 2);
         setActiveDot(spreadIdx);
       }
+
+      // En celulares, al cambiar a una doble página (P.02–09), enfocar la página izquierda para leer cómodamente y arrastrar hacia la derecha
+      if (window.innerWidth <= 768) {
+        panY = 0;
+        if (pageIndex === 0 || pageIndex >= 9) {
+          panX = 0;
+        } else {
+          panX = Math.round(240 * baseScale * userZoom);
+        }
+        applyStageTransform();
+      }
     }
 
     function setActiveDot(activeIdx) {
-      spreadDots.forEach((dot, i) => dot.classList.toggle('active', i === activeIdx));
+      spreadDots.forEach((dot, i) => {
+        const isActive = i === activeIdx;
+        dot.classList.toggle('active', isActive);
+        if (isActive && window.innerWidth <= 768) {
+          dot.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+      });
     }
 
     pageFlip.on('flip', (e) => {
@@ -1387,7 +1484,7 @@
       if (e.key === 'ArrowLeft') pageFlip.flipPrev('bottom');
     });
 
-    // Auto-scale stage so the 1000x707 brochure always fits the screen height cleanly + Slider de Zoom & Pan con Rueda del Ratón
+    // Auto-scale stage so the 1000x707 brochure always fits the screen height cleanly + Slider de Zoom & Pan con Rueda del Ratón / Dedos en Celular
     const stageWrapper = document.getElementById('stageWrapper');
     const stageCanvas = document.getElementById('stageCanvas');
     const zoomSlider = document.getElementById('zoomSlider');
@@ -1397,7 +1494,7 @@
     let panX = 0;
     let panY = 0;
     const MIN_ZOOM = 0.5;
-    const MAX_ZOOM = 2.2;
+    const MAX_ZOOM = 2.8;
 
     function applyStageTransform() {
       const finalScale = baseScale * userZoom;
@@ -1410,15 +1507,23 @@
     }
 
     function fitBookToViewport() {
-      const availW = window.innerWidth - 48;
-      const availH = window.innerHeight - 126;
-      baseScale = Math.min(availW / 1000, availH / 707, 1.14);
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        const availW = window.innerWidth - 20;
+        const availH = window.innerHeight - 138;
+        // En celular escalamos respecto al ancho de 1 página (500px) para que sea grande y legible al 100%
+        baseScale = Math.min(availW / 500, availH / 707, 1.15);
+      } else {
+        const availW = window.innerWidth - 48;
+        const availH = window.innerHeight - 126;
+        baseScale = Math.min(availW / 1000, availH / 707, 1.14);
+      }
       applyStageTransform();
     }
 
     zoomSlider.addEventListener('input', (e) => {
       userZoom = Number(e.target.value) / 100;
-      if (userZoom <= 1.0) {
+      if (userZoom <= 1.0 && window.innerWidth > 768) {
         panX = 0;
         panY = 0;
       }
@@ -1427,8 +1532,12 @@
 
     zoomResetBtn.addEventListener('click', () => {
       userZoom = 1.0;
-      panX = 0;
       panY = 0;
+      if (window.innerWidth <= 768 && currentPageIndex > 0 && currentPageIndex < 9) {
+        panX = Math.round(240 * baseScale * userZoom);
+      } else {
+        panX = 0;
+      }
       applyStageTransform();
     });
 
@@ -1437,14 +1546,14 @@
       e.preventDefault();
       const delta = e.deltaY < 0 ? 0.08 : -0.08;
       userZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round((userZoom + delta) * 100) / 100));
-      if (userZoom <= 1.0) {
+      if (userZoom <= 1.0 && window.innerWidth > 768) {
         panX = 0;
         panY = 0;
       }
       applyStageTransform();
     }, { passive: false });
 
-    // Sistema de Arrastrar al pulsar y mantener la RUEDA DEL RATÓN (button === 1) o Click Derecho (button === 2)
+    // Sistema de Arrastrar en PC: Rueda del ratón (button === 1) o Click Derecho (button === 2)
     let isPanning = false;
     let startMouseX = 0;
     let startMouseY = 0;
@@ -1494,15 +1603,111 @@
       stageWrapper.classList.remove('is-panning');
     }
 
-    // Usar exclusivamente mousedown/mousemove/mouseup (sin pointerdown.preventDefault que cancela mousemove en Chromium)
+    // Usar exclusivamente mousedown/mousemove/mouseup en PC
     window.addEventListener('mousedown', onPanStart, { capture: true });
     window.addEventListener('mousemove', onPanMove, { passive: true });
     window.addEventListener('mouseup', onPanEnd, { capture: true });
     window.addEventListener('blur', onPanEnd);
 
+    // =========================================================================
+    // ARRASTRE TÁCTIL CON 1 DEDO (PAN) Y PINCH-TO-ZOOM CON 2 DEDOS EN CELULARES
+    // =========================================================================
+    let isTouchPanning = false;
+    let isPinching = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartPanX = 0;
+    let touchStartPanY = 0;
+    let initialPinchDist = 0;
+    let initialPinchZoom = 1;
+
+    function isInteractiveTouchTarget(target) {
+      return Boolean(target && target.closest('.interactive-el, a, button, input'));
+    }
+
+    // Bloquear que StPageFlip intercepte el toque en pantallas táctiles para poder arrastrar y leer libremente
+    stageWrapper.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' && !isInteractiveTouchTarget(e.target)) {
+        e.stopPropagation();
+      }
+    }, { capture: true });
+
+    stageWrapper.addEventListener('touchstart', (e) => {
+      if (isInteractiveTouchTarget(e.target)) return;
+      e.stopPropagation();
+
+      if (e.touches.length === 1) {
+        isTouchPanning = true;
+        isPinching = false;
+        stageWrapper.classList.add('is-panning');
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartPanX = panX;
+        touchStartPanY = panY;
+      } else if (e.touches.length === 2) {
+        isTouchPanning = false;
+        isPinching = true;
+        stageWrapper.classList.add('is-panning');
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        initialPinchDist = Math.hypot(dx, dy);
+        initialPinchZoom = userZoom;
+        touchStartX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        touchStartY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        touchStartPanX = panX;
+        touchStartPanY = panY;
+      }
+    }, { capture: true, passive: true });
+
+    stageWrapper.addEventListener('touchmove', (e) => {
+      if (!isTouchPanning && !isPinching) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (isTouchPanning && e.touches.length === 1) {
+        panX = touchStartPanX + (e.touches[0].clientX - touchStartX);
+        panY = touchStartPanY + (e.touches[0].clientY - touchStartY);
+        applyStageTransform();
+      } else if (isPinching && e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.hypot(dx, dy);
+        if (initialPinchDist > 10) {
+          const nextZoom = initialPinchZoom * (dist / initialPinchDist);
+          userZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(nextZoom * 100) / 100));
+        }
+        const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        panX = touchStartPanX + (midX - touchStartX);
+        panY = touchStartPanY + (midY - touchStartY);
+        applyStageTransform();
+      }
+    }, { capture: true, passive: false });
+
+    function onTouchEnd(e) {
+      if (e.touches.length === 1 && isPinching) {
+        // Si levantó uno de los dos dedos, continuar arrastrando suavemente con el dedo restante
+        isPinching = false;
+        isTouchPanning = true;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartPanX = panX;
+        touchStartPanY = panY;
+        return;
+      }
+      if (e.touches.length === 0) {
+        isTouchPanning = false;
+        isPinching = false;
+        stageWrapper.classList.remove('is-panning');
+      }
+    }
+
+    stageWrapper.addEventListener('touchend', onTouchEnd, { capture: true, passive: true });
+    stageWrapper.addEventListener('touchcancel', onTouchEnd, { capture: true, passive: true });
+
     window.addEventListener('resize', fitBookToViewport);
-    updateBookUI(0);
     fitBookToViewport();
+    updateBookUI(0);
 
     // =========================================================================
     // 2. CONMUTADOR DE PROYECTOS (01–06) EN LA PÁGINA 09
